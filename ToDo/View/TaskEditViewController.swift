@@ -51,7 +51,7 @@ class TaskEditViewController: UIViewController {
             string: "Write Topic",
             attributes:
             [NSAttributedString.Key.foregroundColor: UIColor.white,
-             NSAttributedString.Key.font: UIFont(name: "Apple SD Gothic Neo", size: 14)])
+             NSAttributedString.Key.font: UIFont(name: "Apple SD Gothic Neo", size: 14)!])
         return tf
     }()
     
@@ -82,7 +82,7 @@ class TaskEditViewController: UIViewController {
             string: "Write Description",
             attributes:
             [NSAttributedString.Key.foregroundColor: UIColor.white,
-             NSAttributedString.Key.font: UIFont(name: "Apple SD Gothic Neo", size: 14)])
+             NSAttributedString.Key.font: UIFont(name: "Apple SD Gothic Neo", size: 14)!])
         return tf
     }()
     
@@ -102,8 +102,9 @@ class TaskEditViewController: UIViewController {
         return cp
     }()
     
-    let scrollView: UIScrollView = {
+    lazy var scrollView: UIScrollView = {
         let sv = UIScrollView()
+        sv.delegate = self
         sv.translatesAutoresizingMaskIntoConstraints = false
         return sv
     }()
@@ -115,21 +116,26 @@ class TaskEditViewController: UIViewController {
         return containerView
     }()
     
-    var containerBottomConstraint: NSLayoutConstraint?
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        view.backgroundColor = UIColor.rgb(red: 72, green: 94, blue: 104)
+        setupViewController()
         
-        navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Save", style: .plain, target: self, action: #selector(saveTapped))
+        setutKeyboardNotification()
         
         setupViews()
         
         setupViewsValues()
+    }
+    
+    private func setupViewController() {
         
-        scrollView.contentSize = CGSize(width: view.frame.width, height: view.frame.height)
+        view.backgroundColor = UIColor.rgb(red: 72, green: 94, blue: 104)
         
+        navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Save", style: .plain, target: self, action: #selector(saveTapped))
+    }
+    
+    func setutKeyboardNotification() {
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: UIResponder.keyboardWillShowNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide), name: UIResponder.keyboardWillHideNotification, object: nil)
     }
@@ -149,42 +155,38 @@ class TaskEditViewController: UIViewController {
         scrollView.scrollIndicatorInsets = .zero
     }
     
-    func setupViewsValues() {
-        topicTitleTextField.text = task.title
-        descriptionTextField.text = task.descript
-    }
-    
-    @objc func saveTapped() {
-        
-        let taskColor: [Float]!
-        guard let taskNameTrimmedValue = topicTitleTextField.text?.trimmingCharacters(in: .whitespacesAndNewlines) else { return }
-        var taskDescriptionTrimmedValue = descriptionTextField.text?.trimmingCharacters(in: .whitespacesAndNewlines)
-        
-        if taskDescriptionTrimmedValue!.isEmpty {
-            taskDescriptionTrimmedValue = "No Description"
-        }
-        
-        if let currentColor = colorPickerView.currentHandle?.color.cgColor.components {
-            taskColor = currentColor.compactMap({ (color) in
-                Float(color)
-            })
-        } else {
-            taskColor = [task.red, task.green, task.blue]
-        }
-        
-        presenter.updateTask(taskName: taskNameTrimmedValue, taskDescription: taskDescriptionTrimmedValue, taskColor: taskColor, uuId: task.id)
-        
-        navigationController?.popViewController(animated: true)
-    }
-    
-    func setupViews() {
+    func setupScrollView() {
         
         view.addSubview(scrollView)
+        
+        scrollView.contentSize = CGSize(width: view.frame.width, height: view.frame.height)
         
         scrollView.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
         scrollView.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
         scrollView.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
         scrollView.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
+    }
+    
+    func setupColorPicker() {
+        
+        colorPickerView.addHandle(at: selectedColorHandle)
+        colorPickerView.addTarget(self, action: #selector(colorPicked(_:)), for: .valueChanged)
+        
+        scrollView.addSubview(colorPickerView)
+        colorPickerView.topAnchor.constraint(equalTo: descriptionTextFieldBottomLineView.bottomAnchor, constant: 24).isActive = true
+        colorPickerView.centerXAnchor.constraint(equalTo: containerView.centerXAnchor).isActive = true
+        colorPickerView.heightAnchor.constraint(equalToConstant: view.frame.height / 5).isActive = true
+        colorPickerView.widthAnchor.constraint(equalToConstant: view.frame.height / 5).isActive = true
+        colorPickerView.bottomAnchor.constraint(equalTo: containerView.bottomAnchor, constant: -24).isActive = true
+    }
+    
+    @objc func colorPicked(_ colorPicker: ChromaColorPicker) {
+        selectedColorHandle = colorPicker.currentHandle!.color
+    }
+    
+    func setupViews() {
+        
+        setupScrollView()
         
         scrollView.addSubview(containerView)
         
@@ -234,28 +236,39 @@ class TaskEditViewController: UIViewController {
         setupColorPicker()
     }
     
-    func setupColorPicker() {
-        
-        colorPickerView.addHandle(at: selectedColorHandle)
-        colorPickerView.addTarget(self, action: #selector(colorPicked(_:)), for: .valueChanged)
-        
-        scrollView.addSubview(colorPickerView)
-        colorPickerView.topAnchor.constraint(equalTo: descriptionTextFieldBottomLineView.bottomAnchor, constant: 24).isActive = true
-        colorPickerView.centerXAnchor.constraint(equalTo: containerView.centerXAnchor).isActive = true
-        colorPickerView.heightAnchor.constraint(equalToConstant: view.frame.height / 5).isActive = true
-        colorPickerView.widthAnchor.constraint(equalToConstant: view.frame.height / 5).isActive = true
-        colorPickerView.bottomAnchor.constraint(equalTo: containerView.bottomAnchor, constant: -24).isActive = true
+    func setupViewsValues() {
+        topicTitleTextField.text = task.title
+        descriptionTextField.text = task.descript
     }
     
-    @objc func colorPicked(_ colorPicker: ChromaColorPicker) {
-        selectedColorHandle = colorPicker.currentHandle!.color
+    @objc func saveTapped() {
+        
+        let taskColor: [Float]!
+        guard let taskNameTrimmedValue = topicTitleTextField.text?.trimmingCharacters(in: .whitespacesAndNewlines) else { return }
+        var taskDescriptionTrimmedValue = descriptionTextField.text?.trimmingCharacters(in: .whitespacesAndNewlines)
+        
+        if taskDescriptionTrimmedValue!.isEmpty {
+            taskDescriptionTrimmedValue = "No Description"
+        }
+        
+        if let currentColor = colorPickerView.currentHandle?.color.cgColor.components {
+            taskColor = currentColor.compactMap({ (color) in
+                Float(color)
+            })
+        } else {
+            taskColor = [task.red, task.green, task.blue]
+        }
+        
+        presenter.updateTask(taskName: taskNameTrimmedValue, taskDescription: taskDescriptionTrimmedValue, taskColor: taskColor, uuId: task.id)
+        
+        navigationController?.popViewController(animated: true)
     }
 }
 
 extension TaskEditViewController: UITextFieldDelegate {
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         self.view.endEditing(true)
-        return false
+        return true
     }
 }
 

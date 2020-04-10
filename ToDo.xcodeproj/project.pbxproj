@@ -58,6 +58,16 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		2005B9DA244052D300E5A0A9 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				206FFEF0243F380A001FB2D0 /* Task+CoreDataClass.swift */,
+				206FFEF1243F380A001FB2D0 /* Task+CoreDataProperties.swift */,
+				206FFECC243F36B7001FB2D0 /* ToDo.xcdatamodel */,
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
 		202EAFB6F92D99CD40AE9D7E /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
@@ -87,13 +97,13 @@
 		206FFEAD243F369C001FB2D0 /* ToDo */ = {
 			isa = PBXGroup;
 			children = (
+				206FFEBF243F369D001FB2D0 /* Info.plist */,
+				2005B9DA244052D300E5A0A9 /* Model */,
 				206FFEE1243F370A001FB2D0 /* View */,
 				206FFEDC243F3700001FB2D0 /* Presenter */,
 				206FFED1243F36BA001FB2D0 /* Recources */,
 				206FFEC8243F36AB001FB2D0 /* Persistance */,
 				206FFEC5243F36A3001FB2D0 /* Extensions */,
-				206FFEBC243F369D001FB2D0 /* LaunchScreen.storyboard */,
-				206FFEBF243F369D001FB2D0 /* Info.plist */,
 			);
 			path = ToDo;
 			sourceTree = "<group>";
@@ -109,10 +119,7 @@
 		206FFEC8243F36AB001FB2D0 /* Persistance */ = {
 			isa = PBXGroup;
 			children = (
-				206FFEF0243F380A001FB2D0 /* Task+CoreDataClass.swift */,
-				206FFEF1243F380A001FB2D0 /* Task+CoreDataProperties.swift */,
 				206FFECB243F36B7001FB2D0 /* TaskListService.swift */,
-				206FFECC243F36B7001FB2D0 /* ToDo.xcdatamodel */,
 			);
 			path = Persistance;
 			sourceTree = "<group>";
@@ -120,6 +127,7 @@
 		206FFED1243F36BA001FB2D0 /* Recources */ = {
 			isa = PBXGroup;
 			children = (
+				206FFEBC243F369D001FB2D0 /* LaunchScreen.storyboard */,
 				206FFED4243F36C3001FB2D0 /* AppDelegate.swift */,
 				206FFED3243F36C3001FB2D0 /* Assets.xcassets */,
 			);
@@ -138,10 +146,10 @@
 		206FFEE1243F370A001FB2D0 /* View */ = {
 			isa = PBXGroup;
 			children = (
-				206FFEE3243F370E001FB2D0 /* TaskCell.swift */,
-				206FFEE4243F370E001FB2D0 /* TaskCreateViewController.swift */,
 				206FFEE2243F370E001FB2D0 /* TaskListViewController.swift */,
+				206FFEE4243F370E001FB2D0 /* TaskCreateViewController.swift */,
 				206FFEE8243F3776001FB2D0 /* TaskEditViewController.swift */,
+				206FFEE3243F370E001FB2D0 /* TaskCell.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";

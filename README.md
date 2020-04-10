@@ -1,7 +1,7 @@
 # ToDo
 Work with Core Data and MVP in a simple ToDo list app.
 
-![](https://s6.gifyu.com/images/todo1.gif)
-![](https://s6.gifyu.com/images/todo2.gif)
-![](https://s6.gifyu.com/images/todo3.gif)
-![](https://s6.gifyu.com/images/todo4.gif)
+![](https://media.giphy.com/media/ejzEDROILvu6vagRMQ/giphy.gif)
+![](https://media.giphy.com/media/Q5iWQ6Q14Z6VGSiZmz/giphy.gif)
+![](https://media.giphy.com/media/cjoh2QPuRV3wiwrPQv/giphy.gif)
+![](https://media.giphy.com/media/dxOZwk5JbTyagkbrFg/giphy.gif)
